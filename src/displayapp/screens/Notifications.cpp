@@ -4,6 +4,8 @@
 #include "components/ble/AlertNotificationService.h"
 #include "Symbols.h"
 
+#include <string.h>
+
 using namespace Pinetime::Applications::Screens;
 extern lv_font_t jetbrains_mono_extrabold_compressed;
 extern lv_font_t jetbrains_mono_bold_20;
@@ -191,11 +193,16 @@ Notifications::NotificationItem::NotificationItem(const char* title,
   /////////
   switch (category) {
     default: {
+      std::string str = msg;
+      if (str != "No notification to display") {
+        str = "New temperature: " + std::string(msg);
+      }
+
       lv_obj_t* alert_subject = lv_label_create(container1, nullptr);
       lv_obj_set_style_local_text_color(alert_subject, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_ORANGE);
       lv_label_set_long_mode(alert_subject, LV_LABEL_LONG_BREAK);
       lv_obj_set_width(alert_subject, LV_HOR_RES - 20);
-      lv_label_set_text(alert_subject, msg);
+      lv_label_set_text(alert_subject, str.c_str());
     } break;
     case Controllers::NotificationManager::Categories::IncomingCall: {
       lv_obj_set_height(container1, 108);

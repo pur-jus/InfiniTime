@@ -28,6 +28,7 @@
 #include "displayapp/screens/FlashLight.h"
 #include "displayapp/screens/BatteryInfo.h"
 #include "displayapp/screens/Steps.h"
+#include "displayapp/screens/Temperature.h"
 
 #include "drivers/Cst816s.h"
 #include "drivers/St7789.h"
@@ -166,7 +167,7 @@ void DisplayApp::Refresh() {
         batteryController.Update();
         break;
       case Messages::NewNotification:
-        LoadApp(Apps::NotificationsPreview, DisplayApp::FullRefreshDirections::Down);
+        // LoadApp(Apps::NotificationsPreview, DisplayApp::FullRefreshDirections::Down);
         break;
       case Messages::TimerDone:
         if (currentApp == Apps::Timer) {
@@ -347,6 +348,9 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
       break;
     case Apps::StopWatch:
       currentScreen = std::make_unique<Screens::StopWatch>(this, *systemTask);
+      break;
+    case Apps::Temperature:
+      currentScreen = std::make_unique<Screens::Temperature>(this, notificationManager, systemTask->nimble().alertService());
       break;
     case Apps::Twos:
       currentScreen = std::make_unique<Screens::Twos>(this);
